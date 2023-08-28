@@ -1,4 +1,28 @@
-{
-    "aws_access_key_id": "YOUR_ACCESS_KEY",
-    "aws_secret_access_key": "YOUR_SECRET_KEY"
+from cryptography.fernet import Fernet
+import json
+
+# Generate a random encryption key
+encryption_key = Fernet.generate_key()
+
+# Create a Fernet cipher object
+cipher_suite = Fernet(encryption_key)
+
+# Credentials
+credentials = {
+    "aws_access_key_id": "YOUR_ACCESS_KEY_GOES_HERE",
+    "aws_secret_access_key": "YOUR_SECRET_KEY_GOES_HERE"
 }
+
+# Encrypt the credentials
+encrypted_credentials = cipher_suite.encrypt(json.dumps(credentials).encode())
+
+# Save encrypted data to config.json
+with open('config.json', 'wb') as config_file:
+    config_file.write(encrypted_credentials)
+
+# Decrypt the data from config.json
+with open('config.json', 'rb') as config_file:
+    encrypted_data = config_file.read()
+    decrypted_data = json.loads(cipher_suite.decrypt(encrypted_data).decode())
+
+print(decrypted_data)
