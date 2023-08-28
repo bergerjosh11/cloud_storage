@@ -1,11 +1,19 @@
 from cryptography.fernet import Fernet
 import json
 
-# Generate a random encryption key
-encryption_key = Fernet.generate_key()
+# Generate a new Fernet key
+new_fernet_key = Fernet.generate_key()
 
-# Create a Fernet cipher object
-cipher_suite = Fernet(encryption_key)
+# Save the new Fernet key to fernet_key.txt
+with open('fernet_key.txt', 'wb') as key_file:
+    key_file.write(new_fernet_key)
+
+# Load the Fernet key from the key file
+with open('fernet_key.txt', 'rb') as key_file:
+    fernet_key = key_file.read()
+
+# Create a Fernet cipher object using the loaded key
+cipher_suite = Fernet(fernet_key)
 
 # Credentials
 credentials = {
